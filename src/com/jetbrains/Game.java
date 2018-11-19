@@ -112,7 +112,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            System.out.printf("Tiro começando nas coordenadas: %d %d\n", playerX, playerY);
+            System.out.printf("Tiro nas coordenadas: %d %d\n", playerX, playerY);
         }
     }
 
