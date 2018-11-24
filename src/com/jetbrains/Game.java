@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements KeyListener, ActionListener {
     private javax.swing.Timer timer;
-    private Player player = new Player(310, 520, "wizard_1");
+    private Player player = new Player(310, 520, "wizard_1", 30);
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<Fireball> playerFireballs = new ArrayList<>();
     private ArrayList<Fireball> enemyFireballs = new ArrayList<>();
@@ -58,16 +58,31 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
 
         // Desenhar todos os inimigos presentes
-        for (Enemy enemy : enemies) {
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
             if (enemy.getSprite() != null) {
                 g.drawImage(enemy.getSprite(), enemy.getX(), enemy.getY(), null);
             } else {
                 g.drawRect(enemy.getX(), enemy.getY(), 20, 20);
             }
+            if (enemy.getRectangle().intersects(player.getRectangle())) {
+                System.out.println("You're dead!");
+            }
+            Iterator<Fireball> pFireballIterator = playerFireballs.iterator();
+            while (pFireballIterator.hasNext()) {
+                Fireball fireball = pFireballIterator.next();
+                if (fireball.getRectangle().intersects(enemy.getRectangle())) {
+                    enemyIterator.remove();
+                    pFireballIterator.remove();
+                }
+            }
         }
 
         // Desenhar todas as bolas de fogo na tela
-        for (Fireball fireball : playerFireballs) {
+        Iterator<Fireball> pFireballIter = playerFireballs.iterator();
+        while (pFireballIter.hasNext()) {
+            Fireball fireball = pFireballIter.next();
             if (fireball.getY() < 700) {
                 // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retângulo azul caso não.
                 if (fireball.getSprite() != null) {
@@ -77,29 +92,27 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.fillRect(fireball.getX(), fireball.getY(), 5, 5);
                 }
             } else {
-                playerFireballs.remove(fireball);
+                pFireballIter.remove();
             }
         }
 
         g.dispose();
-
-        // TODO: Mostrar controles do jogo quando ele ainda não tiver começado
     }
 
     private void moveRight() {
-        player.moveX(20);
+        player.moveX(player.getSpeed());
     }
 
     private void moveLeft() {
-        player.moveX(-20);
+        player.moveX(-player.getSpeed());
     }
 
     private void moveUp() {
-        player.moveY(-20);
+        player.moveY(-player.getSpeed());
     }
 
     private void moveDown() {
-        player.moveY(20);
+        player.moveY(player.getSpeed());
     }
 
     @Override

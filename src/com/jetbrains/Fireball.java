@@ -1,6 +1,6 @@
 package com.jetbrains;
 
-public class Fireball extends Entity {
+class Fireball extends Entity {
     private int speed = -10;
 
     Fireball(int x, int y, String name) {
@@ -11,9 +11,5 @@ public class Fireball extends Entity {
 
     int getSpeed() {
         return this.speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 }
