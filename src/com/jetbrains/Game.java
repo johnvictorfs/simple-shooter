@@ -1,36 +1,30 @@
 package com.jetbrains;
 
-import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
 
 public class Game extends JPanel implements KeyListener, ActionListener {
-    private boolean play = false;
+    private javax.swing.Timer timer;
+    private Player player = new Player(310, 520);
+    private ArrayList<Bullet> bullets = new ArrayList<>();
 
-    private int score = 0;
-    private int totalEnemies = 10;
-
-    private Timer timer;
-    private int delay = 8;
-
-    private int playerX = 310;
-    private int playerY = 520;
-
-    public Game() {
+    Game() {
+        int delay = 8;
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        timer = new Timer(delay, this);
+        timer = new javax.swing.Timer(delay, this);
         timer.start();
     }
 
     public void paint(Graphics g) {
         Color BGColor = Color.gray;
-        Color FGColor = Color.orange;
 
         // Background
         g.setColor(BGColor);
@@ -44,38 +38,53 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         g.fillRect(691, 0, 3, 592);
 
         // Player
-        g.setColor(Color.cyan);
-        g.fillRect(playerX, playerY, 20, 20);
+        if (player.getSprite() != null) {
+            g.drawImage(player.getSprite(), player.getX(), player.getY(), null);
+        }
+        else {
+            g.setColor(Color.cyan);
+            g.fillRect(player.getX(), player.getY(), 20, 20);
+        }
+
+
+        // Pintar todas as balas na tela
+        for (Bullet bullet : bullets) {
+            g.setColor(Color.blue);
+            if (bullet.getY() < 700) {
+                g.fillRect(bullet.getX(), bullet.getY(), 5, 5);
+            }
+        }
 
         g.dispose();
-        // Tiros
-        // For loop aqui com todos os tiros na tela e as coordenadas atuais deles
-//        g.setColor(Color.red);
-//        g.fillRect(playerX, 550, 100, 8);
 
         // TODO: Mostrar controles do jogo quando ele ainda não tiver começado
     }
 
-    public void moveRight() {
-        play = true;
-        playerX += 20;
+    private void moveRight() {
+        player.moveX(20);
     }
-    public void moveLeft() {
-        play = true;
-        playerX -= 20;
+
+    private void moveLeft() {
+        player.moveX(-20);
     }
-    public void moveUp() {
-        play = true;
-        playerY -= 20;
+
+    private void moveUp() {
+        player.moveY(-20);
     }
-    public void moveDown() {
-        play = true;
-        playerY += 20;
+
+    private void moveDown() {
+        player.moveY(20);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
+
+        // Mover as balas pra cima
+        for (Bullet bullet : bullets) {
+            bullet.moveY(bullet.getSpeed());
+        }
+
         repaint();
     }
 
@@ -84,41 +93,43 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         // Movimento pelas setinhas
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             // Não permitir que o Player ultrapasse as bordas
-            if (playerX >= 650) {
-                playerX = 650;
+            if (player.getX() >= 650) {
+                player.setX(650);
             } else {
                 moveRight();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (playerX <= 10) {
-                playerX = 10;
+            if (player.getX() <= 10) {
+                player.setX(10);
             } else {
                 moveLeft();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if (playerY <= 10) {
-                playerY = 10;
+            if (player.getY() <= 10) {
+                player.setY(10);
             } else {
                 moveUp();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            if (playerY >= 530) {
-                playerY = 530;
+            if (player.getY() >= 530) {
+                player.setY(530);
             } else {
                 moveDown();
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            System.out.printf("Tiro nas coordenadas: %d %d\n", playerX, playerY);
+            bullets.add(new Bullet(player.getX() +25, player.getY()));
         }
     }
 
     @Override
-    public void keyTyped(KeyEvent e) { }
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
-    public void keyReleased(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) {
+    }
 }
