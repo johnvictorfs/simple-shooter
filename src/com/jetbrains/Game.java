@@ -1,7 +1,10 @@
 package com.jetbrains;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -24,40 +27,40 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     }
 
     public void paint(Graphics g) {
-        Color BGColor = Color.gray;
 
-        // Background
-        g.setColor(BGColor);
-        setBackground(BGColor);
-        g.fillRect(1, 1, 692, 592);
+        String baseDir = new File("").getAbsolutePath();
+        String bgImgPath = baseDir + "/src/assets/background.png".replace("/", File.separator);
+        BufferedImage bgImg;
+        // Desenhar imagem de background, caso não encontre o background irá ser cinza
+        try {
+            bgImg = ImageIO.read(new File(bgImgPath));
+            g.drawImage(bgImg, 0, 0, 700, 600, null);
+        } catch (java.io.IOException e) {
+            g.setColor(Color.gray);
+            g.fillRect(0, 0, 700, 600);
+        }
 
-        // Bordas
-        g.setColor(Color.black);
-        g.fillRect(0, 0, 3, 592);
-        g.fillRect(0, 0, 692, 3);
-        g.fillRect(691, 0, 3, 592);
-
-        // Desenhar o jogador, desenha a imagem dele caso encontrada, um retangulo azul claro caso nao.
+        // Desenhar o jogador, desenha a imagem dele caso encontrada, um retângulo azul claro caso não.
         if (player.getSprite() != null) {
             g.drawImage(player.getSprite(), player.getX(), player.getY(), null);
-        }
-        else {
+        } else {
             g.setColor(Color.cyan);
             g.fillRect(player.getX(), player.getY(), 20, 20);
         }
 
-
-        // Pintar todas as balas na tela
+        // Desenhar todas as bolas de fogo na tela
         for (Bullet bullet : bullets) {
             if (bullet.getY() < 700) {
-                // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retangulo azul caso nao.
+                // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retângulo azul caso não.
                 if (bullet.getSprite() != null) {
                     g.drawImage(bullet.getSprite(), bullet.getX(), bullet.getY(), null);
-                }
-                else {
+                } else {
                     g.setColor(Color.blue);
                     g.fillRect(bullet.getX(), bullet.getY(), 5, 5);
                 }
+            } else {
+                System.out.println("Removendo bala.");
+                bullets.remove(bullet);
             }
         }
 
@@ -127,7 +130,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            bullets.add(new Bullet(player.getX() +25, player.getY()));
+            bullets.add(new Bullet(player.getX() + 25, player.getY()));
         }
     }
 

@@ -6,7 +6,7 @@ import java.io.File;
 
 public class Bullet extends Entity {
     private BufferedImage sprite;
-    private int speed = -5;
+    private int speed = -10;
 
     Bullet(int x, int y) {
         this.setX(x);
