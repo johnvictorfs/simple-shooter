@@ -14,11 +14,20 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements KeyListener, ActionListener {
     private javax.swing.Timer timer;
-    private Player player = new Player(310, 520);
-    private ArrayList<Bullet> bullets = new ArrayList<>();
+    private Player player = new Player(310, 520, "wizard_1");
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+    private ArrayList<Fireball> playerFireballs = new ArrayList<>();
+    private ArrayList<Fireball> enemyFireballs = new ArrayList<>();
 
     Game() {
         int delay = 8;
+
+        enemies.add(new Enemy(110, 230, "gargoyle_1"));
+        enemies.add(new Enemy(55, 140, "gargoyle_1"));
+        enemies.add(new Enemy(75, 170, "gargoyle_1"));
+        enemies.add(new Enemy(430, 180, "dragon_1"));
+        enemies.add(new Enemy(350, 290, "dragon_1"));
+
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -48,19 +57,27 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.fillRect(player.getX(), player.getY(), 20, 20);
         }
 
+        // Desenhar todos os inimigos presentes
+        for (Enemy enemy : enemies) {
+            if (enemy.getSprite() != null) {
+                g.drawImage(enemy.getSprite(), enemy.getX(), enemy.getY(), null);
+            } else {
+                g.drawRect(enemy.getX(), enemy.getY(), 20, 20);
+            }
+        }
+
         // Desenhar todas as bolas de fogo na tela
-        for (Bullet bullet : bullets) {
-            if (bullet.getY() < 700) {
+        for (Fireball fireball : playerFireballs) {
+            if (fireball.getY() < 700) {
                 // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retângulo azul caso não.
-                if (bullet.getSprite() != null) {
-                    g.drawImage(bullet.getSprite(), bullet.getX(), bullet.getY(), null);
+                if (fireball.getSprite() != null) {
+                    g.drawImage(fireball.getSprite(), fireball.getX(), fireball.getY(), null);
                 } else {
                     g.setColor(Color.blue);
-                    g.fillRect(bullet.getX(), bullet.getY(), 5, 5);
+                    g.fillRect(fireball.getX(), fireball.getY(), 5, 5);
                 }
             } else {
-                System.out.println("Removendo bala.");
-                bullets.remove(bullet);
+                playerFireballs.remove(fireball);
             }
         }
 
@@ -90,8 +107,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         timer.start();
 
         // Mover as balas pra cima
-        for (Bullet bullet : bullets) {
-            bullet.moveY(bullet.getSpeed());
+        for (Fireball fireball : playerFireballs) {
+            fireball.moveY(fireball.getSpeed());
         }
 
         repaint();
@@ -130,7 +147,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            bullets.add(new Bullet(player.getX() + 25, player.getY()));
+            playerFireballs.add(new Fireball(player.getX() + 25, player.getY(), "fireball_1"));
         }
     }
 
