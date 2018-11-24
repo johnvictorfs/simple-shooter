@@ -83,7 +83,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         Iterator<Fireball> pFireballIter = playerFireballs.iterator();
         while (pFireballIter.hasNext()) {
             Fireball fireball = pFireballIter.next();
-            if (fireball.getY() < 700) {
+            if (fireball.getY() > 0) {
                 // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retângulo azul caso não.
                 if (fireball.getSprite() != null) {
                     g.drawImage(fireball.getSprite(), fireball.getX(), fireball.getY(), null);
@@ -92,6 +92,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.fillRect(fireball.getX(), fireball.getY(), 5, 5);
                 }
             } else {
+                System.out.println("Removed fireball");
                 pFireballIter.remove();
             }
         }
