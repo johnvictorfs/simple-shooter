@@ -12,12 +12,10 @@ class Player extends Entity {
         this.setY(y);
         String baseDir = new File("").getAbsolutePath();
         String spritePath = baseDir + "/src/assets/wizard_1.png".replace("/", File.separator);
-        System.out.println(baseDir);
-        System.out.println(spritePath);
         try {
             sprite = ImageIO.read(new File(spritePath));
         } catch (java.io.IOException e) {
-            System.out.println("Nao foi possivel encontrar imagem 'wizard_1.png' em /src/assets/. Jogador vai ser um retangulo azul");
+            System.out.println("Nao foi possivel encontrar imagem 'wizard_1.png' em " + spritePath + ". Jogador vai ser um retangulo azul");
             sprite = null;
         }
     }

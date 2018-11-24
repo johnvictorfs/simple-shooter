@@ -37,7 +37,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         g.fillRect(0, 0, 692, 3);
         g.fillRect(691, 0, 3, 592);
 
-        // Player
+        // Desenhar o jogador, desenha a imagem dele caso encontrada, um retangulo azul claro caso nao.
         if (player.getSprite() != null) {
             g.drawImage(player.getSprite(), player.getX(), player.getY(), null);
         }
@@ -49,9 +49,15 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
         // Pintar todas as balas na tela
         for (Bullet bullet : bullets) {
-            g.setColor(Color.blue);
             if (bullet.getY() < 700) {
-                g.fillRect(bullet.getX(), bullet.getY(), 5, 5);
+                // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retangulo azul caso nao.
+                if (bullet.getSprite() != null) {
+                    g.drawImage(bullet.getSprite(), bullet.getX(), bullet.getY(), null);
+                }
+                else {
+                    g.setColor(Color.blue);
+                    g.fillRect(bullet.getX(), bullet.getY(), 5, 5);
+                }
             }
         }
 
