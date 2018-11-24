@@ -36,6 +36,9 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     }
 
     public void paint(Graphics g) {
+        if (player.isDead()) {
+            return;
+        }
 
         String baseDir = new File("").getAbsolutePath();
         String bgImgPath = baseDir + "/src/assets/background.png".replace("/", File.separator);
@@ -67,12 +70,13 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 g.drawRect(enemy.getX(), enemy.getY(), 20, 20);
             }
             if (enemy.getRectangle().intersects(player.getRectangle())) {
-                System.out.println("You're dead!");
+                player.death(g);
             }
             Iterator<Fireball> pFireballIterator = playerFireballs.iterator();
             while (pFireballIterator.hasNext()) {
                 Fireball fireball = pFireballIterator.next();
                 if (fireball.getRectangle().intersects(enemy.getRectangle())) {
+                    player.addScore(1);
                     enemyIterator.remove();
                     pFireballIterator.remove();
                 }
@@ -92,11 +96,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.fillRect(fireball.getX(), fireball.getY(), 5, 5);
                 }
             } else {
-                System.out.println("Removed fireball");
                 pFireballIter.remove();
             }
         }
-
+        g.setColor(Color.gray);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+        g.drawString("Score: " + player.getScore(), 0, 0);
         g.dispose();
     }
 
@@ -161,7 +166,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            playerFireballs.add(new Fireball(player.getX() + 25, player.getY(), "fireball_1"));
+            playerFireballs.add(new Fireball(player.getX() + 25, player.getY(), "fireball_1", -20));
         }
     }
 
