@@ -1,6 +1,5 @@
 package com.game;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 class Player extends Entity {
