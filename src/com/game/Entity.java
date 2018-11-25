@@ -1,4 +1,4 @@
-package com.jetbrains;
+package com.game;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -29,7 +29,7 @@ class Entity {
     }
 
     Rectangle getRectangle() {
-        return new Rectangle(this.x_coord, this.y_coord, this.width-6, this.height-6);
+        return new Rectangle(this.x_coord, this.y_coord, this.width - 10, this.height - 10);
     }
 
     void setX(int x) {

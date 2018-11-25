@@ -1,4 +1,4 @@
-package com.jetbrains;
+package com.game;
 
 import java.awt.*;
 
