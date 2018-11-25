@@ -10,7 +10,5 @@ class Projectile extends Entity {
         this.speed = speed;
     }
 
-    int getSpeed() {
-        return this.speed;
-    }
+    int getSpeed() { return this.speed; }
 }

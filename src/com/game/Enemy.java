@@ -31,54 +31,28 @@ class Enemy extends Entity {
         }
     }
 
-    void death() {
-        this.dead = true;
-    }
+    void death() { this.dead = true; }
 
-    void setAlive() {
-        this.dead = false;
-    }
+    void setAlive() { this.dead = false; }
 
-    boolean isDead() {
-        return this.dead;
-    }
-    ArrayList<Projectile> getProjectiles() {
-        return this.projectiles;
-    }
+    boolean isDead() { return this.dead; }
+    ArrayList<Projectile> getProjectiles() { return this.projectiles; }
 
-    private void addProjectile(Projectile projectile) {
-        projectiles.add(projectile);
-    }
+    private void addProjectile(Projectile projectile) { projectiles.add(projectile); }
 
-    int getyDir() {
-        return yDir;
-    }
+    int getyDir() { return yDir; }
 
-    void setyDir(int yDir) {
-        this.yDir = yDir;
-    }
+    void setyDir(int yDir) { this.yDir = yDir; }
 
-    int getxDir() {
-        return xDir;
-    }
+    int getxDir() { return xDir; }
 
-    void setxDir(int xDir) {
-        this.xDir = xDir;
-    }
+    void setxDir(int xDir) { this.xDir = xDir; }
 
-    int getInitialX() {
-        return initialX;
-    }
+    int getInitialX() { return initialX; }
 
-    private void setInitialX(int initialX) {
-        this.initialX = initialX;
-    }
+    private void setInitialX(int initialX) { this.initialX = initialX; }
 
-    int getInitialY() {
-        return initialY;
-    }
+    int getInitialY() { return initialY; }
 
-    private void setInitialY(int initialY) {
-        this.initialY = initialY;
-    }
+    private void setInitialY(int initialY) { this.initialY = initialY; }
 }

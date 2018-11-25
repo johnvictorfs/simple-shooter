@@ -89,7 +89,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 while (pProjectileIterator.hasNext()) {
                     Projectile projectile = pProjectileIterator.next();
                     if (projectile.getRectangle().intersects(enemy.getRectangle())) {
-                        player.addScore(1);
+                        player.addScore();
                         enemy.death();
                         pProjectileIterator.remove();
                     }
@@ -250,7 +250,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 player.setX(player.getInitialX());
                 player.setY(player.getInitialY());
                 player.getProjectiles().clear();
-                player.setScore(0);
+                player.resetScore();
                 player.setAlive();
             }
         }

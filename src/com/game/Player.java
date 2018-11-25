@@ -20,55 +20,29 @@ class Player extends Entity {
         this.speed = speed;
     }
 
-    ArrayList<Projectile> getProjectiles() {
-        return this.projectiles;
-    }
+    ArrayList<Projectile> getProjectiles() { return this.projectiles; }
 
-    void addProjectile(Projectile projectile) {
-        projectiles.add(projectile);
-    }
+    void addProjectile(Projectile projectile) { projectiles.add(projectile); }
 
-    int getSpeed() {
-        return this.speed;
-    }
+    int getSpeed() { return this.speed; }
 
-    int getScore() {
-        return this.score;
-    }
+    int getScore() { return this.score; }
 
-    void addScore(int score) {
-        this.score += score;
-    }
+    void addScore() { this.score += 1; }
 
-    void setScore(int score) {
-        this.score = score;
-    }
+    void resetScore() { this.score = 0; }
 
-    boolean isDead() {
-        return this.dead;
-    }
+    boolean isDead() { return this.dead; }
 
-    void setAlive() {
-        this.dead = false;
-    }
+    void setAlive() { this.dead = false; }
 
-    void death() {
-        this.dead = true;
-    }
+    void death() { this.dead = true; }
 
-    public int getInitialX() {
-        return initialX;
-    }
+    int getInitialX() { return initialX; }
 
-    public int getInitialY() {
-        return initialY;
-    }
+    int getInitialY() { return initialY; }
 
-    public void setInitialX(int initialX) {
-        this.initialX = initialX;
-    }
+    private void setInitialX(int initialX) { this.initialX = initialX; }
 
-    public void setInitialY(int initialY) {
-        this.initialY = initialY;
-    }
+    private void setInitialY(int initialY) { this.initialY = initialY; }
 }

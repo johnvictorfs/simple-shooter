@@ -26,12 +26,9 @@ class Entity {
             this.width = 32;
             this.height = 32;
         }
-
     }
 
-    BufferedImage getSprite() {
-        return this.sprite;
-    }
+    BufferedImage getSprite() { return this.sprite; }
 
     Rectangle getRectangle() {
         if (this.sprite != null) {
@@ -40,27 +37,15 @@ class Entity {
         return new Rectangle(this.x_coord, this.y_coord, 32, 32);
     }
 
-    void setX(int x) {
-        this.x_coord = x;
-    }
+    void setX(int x) { this.x_coord = x; }
 
-    void setY(int y) {
-        this.y_coord = y;
-    }
+    void setY(int y) { this.y_coord = y; }
 
-    int getX() {
-        return this.x_coord;
-    }
+    int getX() { return this.x_coord; }
 
-    int getY() {
-        return this.y_coord;
-    }
+    int getY() { return this.y_coord; }
 
-    void moveX(int x) {
-        this.x_coord += x;
-    }
+    void moveX(int x) { this.x_coord += x; }
 
-    void moveY(int y) {
-        this.y_coord += y;
-    }
+    void moveY(int y) { this.y_coord += y; }
 }
