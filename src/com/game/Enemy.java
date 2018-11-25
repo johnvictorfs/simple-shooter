@@ -1,27 +1,34 @@
 package com.game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 class Enemy extends Entity {
 
     private ArrayList<Projectile> projectiles = new ArrayList<>();
-    private int speed;
     private int xDir;
     private int yDir;
     private boolean dead = false;
+    private Random random = new Random();
 
     private int initialX;
     private int initialY;
 
-    Enemy(int x, int y, String name, int speed, int xDir, int yDir) {
+    Enemy(int x, int y, String name, int xDir, int yDir) {
         this.setX(x);
         this.setY(y);
         this.setInitialX(x);
         this.setInitialY(y);
         this.setxDir(xDir);
         this.setyDir(yDir);
-        this.setSpeed(speed);
         this.setSprite(name);
+    }
+
+    void fire() {
+        int randomRoll = random.nextInt(50);
+        if (randomRoll > 40) {
+            addProjectile(new Projectile(getX() + 20, getY() + 60, "iceball_1", random.nextInt(7) + 2));
+        }
     }
 
     void death() {
@@ -39,16 +46,8 @@ class Enemy extends Entity {
         return this.projectiles;
     }
 
-    void addProjectile(Projectile projectile) {
+    private void addProjectile(Projectile projectile) {
         projectiles.add(projectile);
-    }
-
-    int getSpeed() {
-        return this.speed;
-    }
-
-    void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     int getyDir() {
@@ -71,7 +70,7 @@ class Enemy extends Entity {
         return initialX;
     }
 
-    void setInitialX(int initialX) {
+    private void setInitialX(int initialX) {
         this.initialX = initialX;
     }
 
@@ -79,7 +78,7 @@ class Enemy extends Entity {
         return initialY;
     }
 
-    void setInitialY(int initialY) {
+    private void setInitialY(int initialY) {
         this.initialY = initialY;
     }
 }

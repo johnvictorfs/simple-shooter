@@ -17,16 +17,15 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private javax.swing.Timer timer;
     private Player player = new Player(310, 520, "wizard_1", 30);
     private ArrayList<Enemy> enemies = new ArrayList<>();
-    private Random random = new Random();
 
     Game() {
         int delay = 8;
 
-        enemies.add(new Enemy(100, 110, "gargoyle_1", 10, -3, -2));
-        enemies.add(new Enemy(200, 140, "gargoyle_1", 20, -1, -1));
-        enemies.add(new Enemy(300, 130, "gargoyle_1", 15, -1, -2));
-        enemies.add(new Enemy(400, 140, "dragon_1", 5, -4, -2));
-        enemies.add(new Enemy(500, 80, "dragon_1", 10, -2, -2));
+        enemies.add(new Enemy(100, 110, "gargoyle_1", -3, -2));
+        enemies.add(new Enemy(200, 140, "gargoyle_1", -1, -1));
+        enemies.add(new Enemy(300, 130, "gargoyle_1", -1, -2));
+        enemies.add(new Enemy(400, 140, "dragon_1", -4, -2));
+        enemies.add(new Enemy(500, 80, "dragon_1", -2, -2));
 
         addKeyListener(this);
         setFocusable(true);
@@ -193,13 +192,15 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     continue;
                 }
                 if (enemy.getProjectiles().size() > 0) {
+                    // Caso já exista pelo menos uma bola de gelo do inimigo, apenas lançar caso a última bola de gelo
+                    // lançada não esteja muito próxima dele, pra evitar spam de bolas de gelo
                     if (enemy.getProjectiles().get(enemy.getProjectiles().size() - 1).getY() - enemy.getY() > 250) {
                         // Chance de 10/50 de lancar uma bola de gelo aqui
-                        enemyFire(enemy);
+                        enemy.fire();
                     }
                 } else {
                     // Chance de 10/50 de lancar uma bola de gelo aqui
-                    enemyFire(enemy);
+                    enemy.fire();
                 }
             }
 
@@ -215,15 +216,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 }
             }
         }
-
         repaint();
-    }
-
-    private void enemyFire(Enemy enemy) {
-        int randomRoll = random.nextInt(50);
-        if (randomRoll > 40) {
-            enemy.addProjectile(new Projectile(enemy.getX() + 20, enemy.getY() + 60, "iceball_1", 5));
-        }
     }
 
     @Override
