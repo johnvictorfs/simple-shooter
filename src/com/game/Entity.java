@@ -3,7 +3,7 @@ package com.game;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
 
 class Entity {
     private int x_coord;
@@ -13,15 +13,20 @@ class Entity {
     private BufferedImage sprite;
 
     void setSprite(String name) {
-        String baseDir = new File("").getAbsolutePath();
-        String spritePath = baseDir + "/src/assets/" + name + ".png".replace("/", File.separator);
         try {
-            sprite = ImageIO.read(new File(spritePath));
-            this.width = sprite.getWidth();
-            this.height = sprite.getHeight();
-        } catch (java.io.IOException e) {
+            sprite = ImageIO.read(getClass().getResource("/assets/" + name + ".png"));
+        } catch (IOException e) {
             sprite = null;
         }
+        if (sprite != null) {
+            this.width = sprite.getWidth();
+            this.height = sprite.getHeight();
+        }
+        else {
+            this.width = 32;
+            this.height = 32;
+        }
+
     }
 
     BufferedImage getSprite() {
@@ -29,7 +34,10 @@ class Entity {
     }
 
     Rectangle getRectangle() {
-        return new Rectangle(this.x_coord, this.y_coord, this.width - 10, this.height - 10);
+        if (this.sprite != null) {
+            return new Rectangle(this.x_coord, this.y_coord, this.width - 10, this.height - 10);
+        }
+        return new Rectangle(this.x_coord, this.y_coord, 32, 32);
     }
 
     void setX(int x) {

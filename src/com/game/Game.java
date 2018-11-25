@@ -2,7 +2,7 @@ package com.game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -41,20 +41,25 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             this.play = false;
             g.setColor(Color.black);
             g.fillRect(0, 0, 900, 900);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+            g.setFont(new Font("Courier New", Font.BOLD, 40));
             g.setColor(Color.red);
             g.drawString("Game Over, você morreu!", 80, 150);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+            g.setFont(new Font("Courier New", Font.BOLD, 15));
             g.drawString("Pontuaçao final: " + player.getScore(), 250, 200);
             g.setColor(Color.blue);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+            g.setFont(new Font("Courier New", Font.BOLD, 25));
             g.drawString("Aperte Enter para reiniciar", 140, 300);
             return;
         }
 
-        String baseDir = new File("").getAbsolutePath();
-        String bgImgPath = baseDir + "/src/assets/background.png".replace("/", File.separator);
-        drawBackground(g, bgImgPath);
+        BufferedImage background;
+        try {
+            background = ImageIO.read(getClass().getResource("/assets/background.png"));
+        } catch (IOException e) {
+            background = null;
+            e.printStackTrace();
+        }
+        drawBackground(g, background);
 
         // Desenhar o jogador, desenha a imagem dele caso encontrada, um retângulo azul claro caso não.
         if (player.getSprite() != null) {
@@ -129,13 +134,18 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         g.setColor(Color.black);
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.setFont(new Font("Courier New", Font.BOLD, 20));
         g.drawString("Pontos: " + player.getScore(), 10, 20);
 
         if (!play) {
             g.setColor(Color.black);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
-            g.drawString("Aperte Enter para iniciar", 200, 300);
+            g.setFont(new Font("Courier New", Font.BOLD, 25));
+            g.drawString("Aperte Enter para iniciar", 150, 300);
+            g.setColor(Color.orange);
+            g.drawString("- Controles - ", 190, 350);
+            g.setFont(new Font("Courier New", Font.BOLD, 18));
+            g.drawString("Setinhas: Andar", 220, 370);
+            g.drawString("Espaço: Atirar", 220, 385);
         }
 
         // Mostrar que jogador venceu se não existir mais nenhum inimigo
@@ -148,10 +158,16 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         if (!enemiesLeft) {
             this.play = false;
-            String bgWinImgPath = baseDir + "/src/assets/background_2.png".replace("/", File.separator);
+            BufferedImage bgWinImgPath;
+            try {
+                bgWinImgPath = ImageIO.read(getClass().getResource("/assets/background_2.png"));
+            } catch (IOException e) {
+                bgWinImgPath = null;
+                e.printStackTrace();
+            }
             drawBackground(g, bgWinImgPath);
             g.setColor(Color.orange);
-            g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+            g.setFont(new Font("Courier New", Font.BOLD, 20));
             g.drawString("Você ganhou! - Pontuação: " + player.getScore(), 200, 50);
             g.drawString("Aperte Enter para reiniciar", 220, 90);
         }
@@ -159,14 +175,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         g.dispose();
     }
 
-    private void drawBackground(Graphics g, String bgWinImgPath) {
-        BufferedImage bgWin;
-        try {
-            bgWin = ImageIO.read(new File(bgWinImgPath));
+    private void drawBackground(Graphics g, BufferedImage bgWin) {
+        if (bgWin != null) {
             g.drawImage(bgWin, 0, 0, 700, 600, null);
-        } catch (java.io.IOException e) {
-            g.setColor(Color.gray);
-            g.fillRect(0, 0, 700, 600);
+        } else {
+            g.setColor(Color.darkGray);
+            g.drawRect(0, 0, 700, 600);
         }
     }
 
