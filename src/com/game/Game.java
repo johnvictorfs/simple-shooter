@@ -149,12 +149,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         if (!enemiesLeft) {
             this.play = false;
-            String bgWinImgPath = baseDir + "/src/assets/background_2.jpg".replace("/", File.separator);
+            String bgWinImgPath = baseDir + "/src/assets/background_2.png".replace("/", File.separator);
             drawBackground(g, bgWinImgPath);
             g.setColor(Color.orange);
             g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
-            g.drawString("Você ganhou! - Pontuação: " + player.getScore(), 150, 300);
-            g.drawString("Aperte Enter para reiniciar", 150, 450);
+            g.drawString("Você ganhou! - Pontuação: " + player.getScore(), 200, 50);
+            g.drawString("Aperte Enter para reiniciar", 220, 90);
         }
 
         g.dispose();
@@ -194,14 +194,12 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 }
                 if (enemy.getProjectiles().size() > 0) {
                     if (enemy.getProjectiles().get(enemy.getProjectiles().size() - 1).getY() - enemy.getY() > 250) {
-                        // Chance de 10/50 de lancar uma bola de fogo aqui
-                        int randomRoll = random.nextInt(50);
-                        if (randomRoll > 40) {
-                            enemy.addProjectile(new Projectile(enemy.getX() + 20, enemy.getY() + 60, "iceball_1", 5));
-                        }
+                        // Chance de 10/50 de lancar uma bola de gelo aqui
+                        enemyFire(enemy);
                     }
                 } else {
-                    enemy.addProjectile(new Projectile(enemy.getX() + 20, enemy.getY() + 60, "iceball_1", 5));
+                    // Chance de 10/50 de lancar uma bola de gelo aqui
+                    enemyFire(enemy);
                 }
             }
 
@@ -219,6 +217,13 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
 
         repaint();
+    }
+
+    private void enemyFire(Enemy enemy) {
+        int randomRoll = random.nextInt(50);
+        if (randomRoll > 40) {
+            enemy.addProjectile(new Projectile(enemy.getX() + 20, enemy.getY() + 60, "iceball_1", 5));
+        }
     }
 
     @Override
