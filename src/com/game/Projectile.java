@@ -18,14 +18,8 @@ class Projectile extends Entity {
         }
     }
 
-    int getSpeed() { return this.speed; }
-
-    void moveY(int y) throws EntityOutOfBoundsException {
-        if (this.getY() + y > -20 && this.getY() + y < 650) {
-            this.setY(this.getY() + y);
-        } else {
-            throw new EntityOutOfBoundsException();
-        }
+    int getSpeed() {
+        return this.speed;
     }
 
     void disable() {
@@ -34,5 +28,13 @@ class Projectile extends Entity {
 
     boolean isDisabled() {
         return this.disabled;
+    }
+
+    void moveY(int y) throws EntityOutOfBoundsException {
+        if (this.getY() + y > -20 && this.getY() + y < 650) {
+            this.setY(this.getY() + y);
+        } else {
+            throw new EntityOutOfBoundsException();
+        }
     }
 }
