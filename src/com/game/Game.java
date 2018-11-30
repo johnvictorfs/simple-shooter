@@ -1,5 +1,7 @@
 package com.game;
 
+import com.exceptions.EntityOutOfBoundsException;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -17,6 +19,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private javax.swing.Timer timer;
     private Player player = new Player(310, 520, "wizard_1", 30);
     private ArrayList<Enemy> enemies = new ArrayList<>();
+    private GameLoop loop;
 
     Game() {
         int delay = 8;
@@ -32,6 +35,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         setFocusTraversalKeysEnabled(false);
         timer = new javax.swing.Timer(delay, this);
         timer.start();
+        loop = new GameLoop(player, enemies);
     }
 
 
@@ -78,17 +82,18 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.drawImage(enemy.getSprite(), enemy.getX(), enemy.getY(), null);
                 } else {
                     g.setColor(Color.orange);
-                    g.drawRect(enemy.getX(), enemy.getY(), 20, 20);
+                    g.drawRect(enemy.getX(), enemy.getY(), 32, 32);
                 }
-                if (enemy.getRectangle().intersects(player.getRectangle())) {
+                if (enemy.intersects(player)) {
                     player.death();
+                    loop.stopRunning();
                     return;
                 }
                 // Matar inimigos com os projeteis do jogador
                 Iterator<Projectile> pProjectileIterator = player.getProjectiles().iterator();
                 while (pProjectileIterator.hasNext()) {
                     Projectile projectile = pProjectileIterator.next();
-                    if (projectile.getRectangle().intersects(enemy.getRectangle())) {
+                    if (projectile.intersects(enemy)) {
                         player.addScore();
                         enemy.death();
                         pProjectileIterator.remove();
@@ -106,8 +111,9 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.drawRect(enemy.getX(), enemy.getY(), 32, 32);
                 }
                 // Matar o jogador com os projeteis dos inimigos
-                if (projectile.getRectangle().intersects(player.getRectangle())) {
+                if (projectile.intersects(player)) {
                     player.death();
+                    loop.stopRunning();
                     return;
                 }
                 // Remover projeteis que sairam do mapa
@@ -157,7 +163,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             }
         }
         if (!enemiesLeft) {
-            this.play = false;
+            play = false;
+            //loop.stopRunning();
             BufferedImage bgWinImgPath;
             try {
                 bgWinImgPath = ImageIO.read(getClass().getResource("/assets/background_2.png"));
@@ -171,7 +178,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.drawString("Você ganhou! - Pontuação: " + player.getScore(), 200, 50);
             g.drawString("Aperte Enter para reiniciar", 220, 90);
         }
-
         g.dispose();
     }
 
@@ -187,49 +193,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         timer.start();
-
-        if (play) {
-            // Mover para cima todos os projeteis
-            for (Projectile projectile : player.getProjectiles()) {
-                projectile.moveY(projectile.getSpeed());
-            }
-            for (Enemy enemy : enemies) {
-                for (Projectile projectile : enemy.getProjectiles()) {
-                    projectile.moveY(projectile.getSpeed());
-                }
-            }
-
-            // Adicionar 1 tiro para cada inimigo dependendo da posição das que eles já tem e da quantidade
-            for (Enemy enemy : enemies) {
-                // Não adicionar tiros para inimigos mortos
-                if (enemy.isDead()) {
-                    continue;
-                }
-                if (enemy.getProjectiles().size() > 0) {
-                    // Caso já exista pelo menos uma bola de gelo do inimigo, apenas lançar caso a última bola de gelo
-                    // lançada não esteja muito próxima dele, pra evitar spam de bolas de gelo
-                    if (enemy.getProjectiles().get(enemy.getProjectiles().size() - 1).getY() - enemy.getY() > 250) {
-                        // Chance de 10/50 de lancar uma bola de gelo aqui
-                        enemy.fire();
-                    }
-                } else {
-                    // Chance de 10/50 de lancar uma bola de gelo aqui
-                    enemy.fire();
-                }
-            }
-
-            for (Enemy enemy : enemies) {
-                enemy.moveX(enemy.getxDir());
-                enemy.moveY(enemy.getyDir());
-
-                if (enemy.getX() < -20 || enemy.getX() > 650) {
-                    enemy.setxDir(-enemy.getxDir());
-                }
-                if (enemy.getY() < -20 || enemy.getY() > 200) {
-                    enemy.setyDir(-enemy.getyDir());
-                }
-            }
-        }
         repaint();
     }
 
@@ -252,38 +215,63 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 player.getProjectiles().clear();
                 player.resetScore();
                 player.setAlive();
+
+                if (loop.getState() == Thread.State.NEW) {
+                    System.out.println("Starting game.");
+                    loop.setRunning();
+                    loop.start();
+                } else {
+                    System.out.println("Restarting game.");
+                    loop.setRunning();
+                }
             }
         }
         if (play) {
             // Movimento com as setinhas do mouse
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_RIGHT:
-                    player.moveX(player.getSpeed());
+                    try {
+                        player.moveX(player.getSpeed());
+                    } catch (EntityOutOfBoundsException e1) {
+                        player.setX(619);
+                    }
                     break;
                 case KeyEvent.VK_LEFT:
-                    player.moveX(-player.getSpeed());
+                    try {
+                        player.moveX(-player.getSpeed());
+                    } catch (EntityOutOfBoundsException e1) {
+                        player.setX(-15);
+                    }
                     break;
                 case KeyEvent.VK_UP:
-                    player.moveY(-player.getSpeed());
+                    try {
+                        player.moveY(-player.getSpeed());
+                    } catch (EntityOutOfBoundsException e1) {
+                        player.setY(-10);
+                    }
                     break;
                 case KeyEvent.VK_DOWN:
-                    player.moveY(player.getSpeed());
+                    try {
+                        player.moveY(player.getSpeed());
+                    } catch (EntityOutOfBoundsException e1) {
+                        player.setY(519);
+                    }
                     break;
             }
 
             // Não permitir que o jogador saia da tela
-            if (player.getX() >= 650) {
-                player.setX(650);
-            }
-            if (player.getX() <= -15) {
-                player.setX(-15);
-            }
-            if (player.getY() >= 520) {
-                player.setY(520);
-            }
-            if (player.getY() <= -10) {
-                player.setY(-10);
-            }
+//            if (player.getX() >= 650) {
+//                player.setX(650);
+//            }
+//            if (player.getX() <= -15) {
+//                player.setX(-15);
+//            }
+//            if (player.getY() >= 520) {
+//                player.setY(520);
+//            }
+//            if (player.getY() <= -10) {
+//                player.setY(-10);
+//            }
 
             // Adicionar bolas de fogo com a barra de espaço
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {

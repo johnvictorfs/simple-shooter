@@ -1,5 +1,7 @@
 package com.game;
 
+import com.exceptions.EntityOutOfBoundsException;
+
 class Projectile extends Entity {
     private int speed;
 
@@ -11,4 +13,12 @@ class Projectile extends Entity {
     }
 
     int getSpeed() { return this.speed; }
+
+    void moveY(int y) throws EntityOutOfBoundsException {
+        if (this.getY() + y > -20 && this.getY() + y < 650) {
+            this.setY(this.getY() + y);
+        } else {
+            throw new EntityOutOfBoundsException();
+        }
+    }
 }

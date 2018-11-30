@@ -16,3 +16,7 @@ public class Main {
         app.add(game);
     }
 }
+
+// TODO: Adicionar exceçoes criadas por mim
+// TODO: Usar throw/try/catch com essas exceçoes para controlar o flow do jogo
+// TODO: Ler/Escrever algum tipo de dado proprio do jogo para arquivos

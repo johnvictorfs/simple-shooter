@@ -1,5 +1,7 @@
 package com.game;
 
+import com.exceptions.EntityOutOfBoundsException;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,6 +38,7 @@ class Enemy extends Entity {
     void setAlive() { this.dead = false; }
 
     boolean isDead() { return this.dead; }
+
     ArrayList<Projectile> getProjectiles() { return this.projectiles; }
 
     private void addProjectile(Projectile projectile) { projectiles.add(projectile); }
@@ -55,4 +58,12 @@ class Enemy extends Entity {
     int getInitialY() { return initialY; }
 
     private void setInitialY(int initialY) { this.initialY = initialY; }
+
+    void moveY(int y) throws EntityOutOfBoundsException {
+        if (this.getY() + y > -20 && this.getY() + y < 220) {
+            this.setY(this.getY() + y);
+        } else {
+            throw new EntityOutOfBoundsException();
+        }
+    }
 }
