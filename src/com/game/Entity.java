@@ -17,7 +17,7 @@ class Entity {
 
     void setSprite(String name) {
 
-        URL path = getClass().getResource("/assets/" + name + ".png");
+        URL path = getClass().getResource("/assetss/" + name + ".png");
         if (path != null) {
             try {
                 sprite = ImageIO.read(path);
@@ -25,18 +25,20 @@ class Entity {
                 this.height = sprite.getHeight();
             } catch (IOException e) {
                 sprite = null;
-                this.width = 32;
-                this.height = 32;
+                this.setWidth(32);
+                this.setHeight(32);
             }
         } else {
-            this.width = 32;
-            this.height = 32;
+            this.setWidth(32);
+            this.setHeight(32);
         }
     }
 
-    BufferedImage getSprite() {
-        return this.sprite;
-    }
+    void setWidth(int width) { this.width = width; }
+
+    void setHeight(int height) { this.height = height; }
+
+    BufferedImage getSprite() { return this.sprite; }
 
     private Rectangle getRectangle() {
         if (this.sprite != null) {
@@ -45,25 +47,15 @@ class Entity {
         return new Rectangle(this.x_coord, this.y_coord, 32, 32);
     }
 
-    boolean intersects(Entity b) {
-        return this.getRectangle().intersects(b.getRectangle());
-    }
+    boolean intersects(Entity b) { return this.getRectangle().intersects(b.getRectangle()); }
 
-    void setX(int x) {
-        this.x_coord = x;
-    }
+    void setX(int x) { this.x_coord = x; }
 
-    void setY(int y) {
-        this.y_coord = y;
-    }
+    void setY(int y) { this.y_coord = y; }
 
-    int getX() {
-        return this.x_coord;
-    }
+    int getX() { return this.x_coord; }
 
-    int getY() {
-        return this.y_coord;
-    }
+    int getY() { return this.y_coord; }
 
     void moveX(int x) throws EntityOutOfBoundsException {
         if (this.x_coord + x > 0 && this.x_coord + x < 620) {

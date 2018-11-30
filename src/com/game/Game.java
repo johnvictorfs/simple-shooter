@@ -70,7 +70,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.drawImage(player.getSprite(), player.getX(), player.getY(), null);
         } else {
             g.setColor(Color.cyan);
-            g.fillRect(player.getX(), player.getY(), 20, 20);
+            g.fillRect(player.getX(), player.getY(), 32, 32);
         }
 
         // Desenhar todos os inimigos presentes
@@ -108,7 +108,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.drawImage(projectile.getSprite(), projectile.getX(), projectile.getY(), null);
                 } else {
                     g.setColor(Color.green);
-                    g.drawRect(enemy.getX(), enemy.getY(), 32, 32);
+                    g.drawRect(projectile.getX(), projectile.getY(), 10, 10);
                 }
                 // Matar o jogador com os projeteis dos inimigos
                 if (projectile.intersects(player)) {
@@ -117,7 +117,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     return;
                 }
                 // Remover projeteis que sairam do mapa
-                if (projectile.getY() > 700) {
+                if (projectile.isDisabled()) {
                     eProjectileIterator.remove();
                 }
             }
@@ -133,7 +133,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     g.drawImage(projectile.getSprite(), projectile.getX(), projectile.getY(), null);
                 } else {
                     g.setColor(Color.blue);
-                    g.fillRect(projectile.getX(), projectile.getY(), 32, 32);
+                    g.fillRect(projectile.getX(), projectile.getY(), 10, 10);
                 }
             } else {
                 pProjectileIter.remove();
@@ -258,20 +258,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     }
                     break;
             }
-
-            // Não permitir que o jogador saia da tela
-//            if (player.getX() >= 650) {
-//                player.setX(650);
-//            }
-//            if (player.getX() <= -15) {
-//                player.setX(-15);
-//            }
-//            if (player.getY() >= 520) {
-//                player.setY(520);
-//            }
-//            if (player.getY() <= -10) {
-//                player.setY(-10);
-//            }
 
             // Adicionar bolas de fogo com a barra de espaço
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {

@@ -4,12 +4,18 @@ import com.exceptions.EntityOutOfBoundsException;
 
 class Projectile extends Entity {
     private int speed;
+    private boolean disabled = false;
 
     Projectile(int x, int y, String name, int speed) {
         this.setX(x);
         this.setY(y);
         this.setSprite(name);
         this.speed = speed;
+
+        if (this.getSprite() == null) {
+            this.setWidth(10);
+            this.setHeight(10);
+        }
     }
 
     int getSpeed() { return this.speed; }
@@ -20,5 +26,13 @@ class Projectile extends Entity {
         } else {
             throw new EntityOutOfBoundsException();
         }
+    }
+
+    void disable() {
+        this.disabled = true;
+    }
+
+    boolean isDisabled() {
+        return this.disabled;
     }
 }

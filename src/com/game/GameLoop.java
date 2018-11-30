@@ -40,7 +40,7 @@ public class GameLoop extends Thread {
                 try {
                     projectile.moveY(projectile.getSpeed());
                 } catch (EntityOutOfBoundsException e) {
-
+                    projectile.disable();
                 }
             }
             for (Enemy enemy : enemies) {
@@ -48,7 +48,7 @@ public class GameLoop extends Thread {
                     try {
                         projectile.moveY(projectile.getSpeed());
                     } catch (EntityOutOfBoundsException e) {
-
+                        projectile.disable();
                     }
                 }
             }
@@ -83,13 +83,6 @@ public class GameLoop extends Thread {
                 } catch (EntityOutOfBoundsException e) {
                     enemy.setyDir(-enemy.getyDir());
                 }
-
-//                if (enemy.getX() < -20 || enemy.getX() > 650) {
-//                    enemy.setxDir(-enemy.getxDir());
-//                }
-//                if (enemy.getY() < -20 || enemy.getY() > 200) {
-//                    enemy.setyDir(-enemy.getyDir());
-//                }
             }
         }
     }
