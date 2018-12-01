@@ -8,21 +8,23 @@ import java.util.Random;
 class Enemy extends Entity {
 
     private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private int score;
     private int xDir;
     private int yDir;
+    private int initialX;
+    private int initialY;
     private boolean dead = false;
     private Random random = new Random();
 
-    private int initialX;
-    private int initialY;
 
-    Enemy(int x, int y, String name, int xDir, int yDir) {
+    Enemy(int x, int y, String name, int xDir, int yDir, int score) {
         this.setX(x);
         this.setY(y);
         this.setInitialX(x);
         this.setInitialY(y);
         this.setxDir(xDir);
         this.setyDir(yDir);
+        this.setScore(score);
         this.setSprite(name);
     }
 
@@ -43,6 +45,14 @@ class Enemy extends Entity {
 
     boolean isDead() {
         return this.dead;
+    }
+
+    private void setScore(int score) {
+        this.score = score;
+    }
+
+    int getScore() {
+        return this.score;
     }
 
     ArrayList<Projectile> getProjectiles() {
@@ -86,7 +96,7 @@ class Enemy extends Entity {
     }
 
     void moveY(int y) throws EntityOutOfBoundsException {
-        if (this.getY() + y > -20 && this.getY() + y < 220) {
+        if (this.getY() + y > 0 && this.getY() + y < 220) {
             this.setY(this.getY() + y);
         } else {
             throw new EntityOutOfBoundsException();

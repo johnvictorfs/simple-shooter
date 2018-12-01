@@ -4,7 +4,7 @@ import com.exceptions.EntityOutOfBoundsException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,18 +17,23 @@ import java.awt.event.KeyListener;
 public class Game extends JPanel implements KeyListener, ActionListener {
     private boolean play = false;
     private javax.swing.Timer timer;
-    private Player player = new Player(310, 520, "wizard_1", 30);
-    private ArrayList<Enemy> enemies = new ArrayList<>();
+    private Player player;
+    private ArrayList<Enemy> enemies;
     private GameLoop loop;
 
     Game() {
         int delay = 8;
 
-        enemies.add(new Enemy(100, 110, "gargoyle_1", -3, -2));
-        enemies.add(new Enemy(200, 140, "gargoyle_1", -1, -1));
-        enemies.add(new Enemy(300, 130, "gargoyle_1", -1, -2));
-        enemies.add(new Enemy(400, 140, "dragon_1", -4, -2));
-        enemies.add(new Enemy(500, 80, "dragon_1", -2, -2));
+        String playerSavePath = "player_save.dat";
+        player = new Player(310, 520, "wizard_1", 30, 0);
+        player.readSave(playerSavePath);
+
+        enemies = new ArrayList<>();
+        enemies.add(new Enemy(100, 110, "gargoyle_1", -3, -2, 2));
+        enemies.add(new Enemy(200, 140, "gargoyle_1", -1, -1, 2));
+        enemies.add(new Enemy(300, 130, "gargoyle_1", -1, -2, 2));
+        enemies.add(new Enemy(400, 140, "dragon_1", -4, -2, 2));
+        enemies.add(new Enemy(500, 80, "dragon_1", -2, -2, 4));
 
         addKeyListener(this);
         setFocusable(true);
@@ -49,7 +54,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             g.setColor(Color.red);
             g.drawString("Game Over, você morreu!", 80, 150);
             g.setFont(new Font("Courier New", Font.BOLD, 15));
-            g.drawString("Pontuaçao final: " + player.getScore(), 250, 200);
+            g.drawString("Pontuaçao final (esse jogo): " + player.getScore(), 250, 200);
+            g.drawString("Pontuaçao total: " + player.getTotalScore(), 250, 220);
             g.setColor(Color.blue);
             g.setFont(new Font("Courier New", Font.BOLD, 25));
             g.drawString("Aperte Enter para reiniciar", 140, 300);
@@ -67,7 +73,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
         // Desenhar o jogador, desenha a imagem dele caso encontrada, um retângulo azul claro caso não.
         if (player.getSprite() != null) {
-            g.drawImage(player.getSprite(), player.getX(), player.getY(), null);
+            player.getSprite().paintIcon(this, g, player.getX(), player.getY());
         } else {
             g.setColor(Color.cyan);
             g.fillRect(player.getX(), player.getY(), 32, 32);
@@ -79,7 +85,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             // mas continuar desenhando os projeteis que ele ja lancou mesmo se estiver morto
             if (!enemy.isDead()) {
                 if (enemy.getSprite() != null) {
-                    g.drawImage(enemy.getSprite(), enemy.getX(), enemy.getY(), null);
+                    enemy.getSprite().paintIcon(this, g, enemy.getX(), enemy.getY());
                 } else {
                     g.setColor(Color.orange);
                     g.drawRect(enemy.getX(), enemy.getY(), 32, 32);
@@ -94,7 +100,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 while (pProjectileIterator.hasNext()) {
                     Projectile projectile = pProjectileIterator.next();
                     if (projectile.intersects(enemy)) {
-                        player.addScore();
+                        player.addScore(enemy.getScore());
+                        player.writeSave();
                         enemy.death();
                         pProjectileIterator.remove();
                     }
@@ -105,7 +112,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             while (eProjectileIterator.hasNext()) {
                 Projectile projectile = eProjectileIterator.next();
                 if (projectile.getSprite() != null) {
-                    g.drawImage(projectile.getSprite(), projectile.getX(), projectile.getY(), null);
+                    projectile.getSprite().paintIcon(this, g, projectile.getX(), projectile.getY());
                 } else {
                     g.setColor(Color.green);
                     g.drawRect(projectile.getX(), projectile.getY(), 10, 10);
@@ -130,7 +137,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             if (projectile.getY() > 0) {
                 // Desenhar a imagem da bola de fogo caso encontre imagem, ou um retângulo azul caso não.
                 if (projectile.getSprite() != null) {
-                    g.drawImage(projectile.getSprite(), projectile.getX(), projectile.getY(), null);
+                    projectile.getSprite().paintIcon(this, g, projectile.getX(), projectile.getY());
                 } else {
                     g.setColor(Color.blue);
                     g.fillRect(projectile.getX(), projectile.getY(), 10, 10);
@@ -141,7 +148,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         g.setColor(Color.black);
         g.setFont(new Font("Courier New", Font.BOLD, 20));
-        g.drawString("Pontos: " + player.getScore(), 10, 20);
+        g.drawString("Pontos (esse jogo): " + player.getScore(), 10, 20);
+        g.drawString("Pontos (total): " + player.getTotalScore(), 10, 35);
 
         if (!play) {
             g.setColor(Color.black);
@@ -173,10 +181,14 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 e.printStackTrace();
             }
             drawBackground(g, bgWinImgPath);
-            g.setColor(Color.orange);
+            g.setColor(Color.green);
             g.setFont(new Font("Courier New", Font.BOLD, 20));
-            g.drawString("Você ganhou! - Pontuação: " + player.getScore(), 200, 50);
-            g.drawString("Aperte Enter para reiniciar", 220, 90);
+            g.drawString("Você ganhou!", 200, 30);
+            g.setColor(Color.darkGray);
+            g.drawString("Pontuação esse jogo: " + player.getScore(), 200, 65);
+            g.drawString("Pontuação total: " + player.getTotalScore(), 200, 90);
+            g.setColor(Color.magenta);
+            g.drawString("Aperte Enter para reiniciar", 220, 125);
         }
         g.dispose();
     }
@@ -217,11 +229,11 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 player.setAlive();
 
                 if (loop.getState() == Thread.State.NEW) {
-                    System.out.println("Starting game.");
+                    System.out.println("Iniciando jogo.");
                     loop.setRunning();
                     loop.start();
                 } else {
-                    System.out.println("Restarting game.");
+                    System.out.println("Reiniciando jogo.");
                     loop.setRunning();
                 }
             }
@@ -233,21 +245,21 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                     try {
                         player.moveX(player.getSpeed());
                     } catch (EntityOutOfBoundsException e1) {
-                        player.setX(619);
+                        player.setX(664);
                     }
                     break;
                 case KeyEvent.VK_LEFT:
                     try {
                         player.moveX(-player.getSpeed());
                     } catch (EntityOutOfBoundsException e1) {
-                        player.setX(-15);
+                        player.setX(1);
                     }
                     break;
                 case KeyEvent.VK_UP:
                     try {
                         player.moveY(-player.getSpeed());
                     } catch (EntityOutOfBoundsException e1) {
-                        player.setY(-10);
+                        player.setY(1);
                     }
                     break;
                 case KeyEvent.VK_DOWN:
