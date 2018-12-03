@@ -22,8 +22,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private GameLoop loop;
 
     Game() {
-        int delay = 8;
-
         String playerSavePath = "player_save.dat";
         player = new Player(310, 520, "wizard_1", 30, 0);
         player.readSave(playerSavePath);
@@ -38,7 +36,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        timer = new javax.swing.Timer(delay, this);
+        timer = new javax.swing.Timer(8, this);
         timer.start();
         loop = new GameLoop(player, enemies);
     }
@@ -172,7 +170,6 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         }
         if (!enemiesLeft) {
             play = false;
-            //loop.stopRunning();
             BufferedImage bgWinImgPath;
             try {
                 bgWinImgPath = ImageIO.read(getClass().getResource("/assets/background_2.png"));

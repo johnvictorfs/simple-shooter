@@ -16,5 +16,3 @@ public class Main {
         app.add(game);
     }
 }
-
-// TODO: Ler/Escrever algum tipo de dado proprio do jogo para arquivos

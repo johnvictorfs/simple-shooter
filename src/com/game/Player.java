@@ -95,6 +95,7 @@ class Player extends Entity {
         try {
             oos = new ObjectOutputStream(new FileOutputStream(playerSave));
             oos.writeObject(this);
+            oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,6 +109,7 @@ class Player extends Entity {
             ois = new ObjectInputStream(new FileInputStream(playerSave));
             Player temp = (Player) ois.readObject();
             this.setTotalScore(temp.getTotalScore());
+            ois.close();
         } catch (IOException | ClassNotFoundException e) {
             this.writeSave();
         }
