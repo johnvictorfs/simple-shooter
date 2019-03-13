@@ -8,7 +8,7 @@
 
 - Pressing Enter on the Start Screen menu starts the Game
 
-- Player can movement anywhere in the screen with the Arrow keys of the keyboard and shoot with the Spacebar
+- Player can movement anywhere in the screen with <kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>&rarr;</kbd> <kbd>&darr;</kbd> and shoot with <kbd>Spacebar</kbd>
 
 - A NPC dies when shot with a fireball
 
@@ -32,7 +32,7 @@
 ## Building
 
 - Intellij IDEA
-    - Run with `Alt + Shift + F10`
+    - Run with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F10</kbd>
     - Select `0 (Edit configurations)`
     - Use `com.game.Main` as the Main Class
     - Run main with `Shift + F10`
