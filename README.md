@@ -35,4 +35,4 @@
     - Run with <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F10</kbd>
     - Select `0 (Edit configurations)`
     - Use `com.game.Main` as the Main Class
-    - Run main with `Shift + F10`
+    - Run main with <kbd>Shift</kbd> + <kbd>F10</kbd>
